@@ -40,19 +40,11 @@ var Board = React.createClass({
         wrapper.removeEventListener(event.type, arguments.callee) // For some reason this doesn't work!!
     },
     getInitialState: function() {
-        var wordListObject = {
-            wordList: this.props.words.map(function(d, i) {
-                return {
-                    id: i,
-                    word: d,
-                    x: Math.random() * width,
-                    y: Math.random() * height,
-                    w: 0,
-                    h: 0,
-                }
-            })
+        return {
+            wordList: this.props.words,
+            grabbing: false,
+            grabbedId: null
         }
-        return wordListObject
     },
 
     reportOffsets(index, offsets) {
