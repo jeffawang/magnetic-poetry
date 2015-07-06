@@ -5,6 +5,10 @@ div#board {
     width: 900px;
 }
 
+.above {
+    z-index: 1;
+}
+
 .grabbing {
     cursor: -webkit-grabbing;
     cursor: grabbing;

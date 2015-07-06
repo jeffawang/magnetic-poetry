@@ -67,8 +67,7 @@ var Board = React.createClass({
             return <Magnet
                     ref={i}
                     data={d}
-                    grabbing={this.state.grabbing}
-                    grabbedId={this.state.grabbedId}
+                    above={this.state.grabbing && this.state.grabbedId === i}
                     grabbedMouseDown={this.grabbedMouseDown.bind(this, d.id)}
                     xyBound={this.xyBound}
                     />
@@ -100,8 +99,7 @@ var Magnet = React.createClass({
     render: function() {
         var omg = {"left": "100px"}
         var cx = React.addons.classSet
-        var grabbable = !(this.props.grabbing && (this.props.data.id === this.props.grabbedId))
-        var myClasses = cx({magnet: true, grabbable: grabbable})
+        var myClasses = cx({magnet: true, grabbable: true, above: this.props.above})
         return <div
                 className={myClasses}
                 style={this.makeStyle()}
