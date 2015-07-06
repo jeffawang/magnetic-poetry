@@ -74,6 +74,8 @@ body {
             return function(e) { that.mouseUp(listenerToRemove, e) }
         },
         mouseDown: function(wordIndex, e) {
+            //console.log(e.target)
+            //console.log(e.currentTarget)
             this.startDrag = {
                 clientX: e.clientX,
                 clientY: e.clientY,
@@ -131,6 +133,7 @@ body {
 
     var Magnet = React.createClass({
         onMouseDown: function(e) {
+            console.log("Magnet.onMouseDown")
             this.props.registerMouseDown(this.props.wordid, e)
         },
         onMouseUp: function(e) {
@@ -140,9 +143,9 @@ body {
             return this.makeStyle()
         },
         makeStyle: function() {
-            var grabbingMe = this.props.selectedWordIndex === this.props.wordid && this.props.grabbing
+            this.grabbingMe = this.props.selectedWordIndex === this.props.wordid && this.props.grabbing
             newStyle = {
-                    zIndex: grabbingMe ? 1 : 0,
+                    zIndex: this.grabbingMe ? 1 : 0,
                     left:   this.props.word.x + "px",
                     top:    this.props.word.y + "px"
             }
@@ -151,7 +154,7 @@ body {
         render: function() {
             var omg = {"left": "100px"}
             var cx = React.addons.classSet
-            var myClasses = cx({magnet: true, grabbable: !this.props.grabbing, grabbing: this.props.grabbing})
+            var myClasses = cx({magnet: true, grabbable: !this.grabbingMe, grabbing: this.grabbingMe})
             return <div className={myClasses} onMouseDown={this.onMouseDown} onMouseUp={this.onMouseUp}
               style={this.makeStyle()}
               onMouseDown={this.onMouseDown}
