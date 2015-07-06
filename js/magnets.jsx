@@ -8,34 +8,35 @@ d3.json("/data/words.json", function(err, data) {
 
 var Board = React.createClass({
     grabbedMouseMove: function(index, originOffset, event) {
-        var nodeData = this.state.wordList[index]
-        var maxX = width - nodeData.w
-        var maxY = height - nodeData.h
+        var magnetData = this.state.wordList[index]
+        var maxX = width - magnetData.w
+        var maxY = height - magnetData.h
         var dragX = originOffset.x + event.clientX
         var dragY = originOffset.y + event.clientY
         var newX = Math.max(0, Math.min(maxX, dragX))
         var newY = Math.max(0, Math.min(maxY, dragY))
-        nodeData.x = newX
-        nodeData.y = newY
+        magnetData.x = newX
+        magnetData.y = newY
         this.setState(this.state)
     },
     grabbedMouseDown: function(index, event) {
-        var node = React.findDOMNode(this) // board
+        var board = React.findDOMNode(this)
+        var magnetData = this.state.wordList[index]
         var originOffset = {
-            x: this.state.wordList[index].x - event.clientX,
-            y: this.state.wordList[index].y - event.clientY
+            x: magnetData.x - event.clientX,
+            y: magnetData.y - event.clientY
         }
         var newMouseMove = this.grabbedMouseMove.bind(this, index, originOffset)
         var newMouseUp = this.grabbedMouseUp.bind(this, newMouseMove)
-        node.addEventListener("mousemove", newMouseMove, false)
-        node.addEventListener("mouseup", newMouseUp, false)
+        board.addEventListener("mousemove", newMouseMove, false)
+        board.addEventListener("mouseup", newMouseUp, false)
         this.setState({grabbing: true, grabbedId: index})
     },
     grabbedMouseUp: function(mouseMoveFunc, event) {
         this.setState({grabbing: false})
-        node = React.findDOMNode(this)
-        node.removeEventListener("mousemove", mouseMoveFunc)
-        node.removeEventListener(event.type, arguments.callee) // For some reason this doesn't work!!
+        board = React.findDOMNode(this)
+        board.removeEventListener("mousemove", mouseMoveFunc)
+        board.removeEventListener(event.type, arguments.callee) // For some reason this doesn't work!!
     },
     getInitialState: function() {
         var wordListObject = {
@@ -98,9 +99,9 @@ var Magnet = React.createClass({
         return newStyle
     },
     componentDidMount: function() {
-        var node = React.findDOMNode(this)
-        var w = node.offsetWidth
-        var h = node.offsetHeight
+        var magnetDiv = React.findDOMNode(this)
+        var w = magnetDiv.offsetWidth
+        var h = magnetDiv.offsetHeight
         var xCorrect = this.props.data.x + w - width
         var yCorrect = this.props.data.y + h - height
         this.props.reportOffsets(this.props.data.id, [w,h])
