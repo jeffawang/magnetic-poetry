@@ -40,7 +40,8 @@ var Board = React.createClass({
                     x: Math.random() * width,
                     y: Math.random() * height,
                     selectedWordIndex: 0,
-                    grabbing: false
+                    grabbing: false,
+                    grabbedId: null
                 }
             })
         }
