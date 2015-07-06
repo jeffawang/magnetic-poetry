@@ -8,16 +8,14 @@ d3.json("/data/words.json", function(err, data) {
 
 var Board = React.createClass({
     grabbedMouseMove: function(index, startCoords, event) {
-        var node = React.findDOMNode(this.refs[index]) // Magnet
-        var maxX = width - node.offsetWidth
-        var maxY = height - node.offsetHeight
+        var nodeData = this.state.wordList[index]
+        var maxX = width - nodeData.w
+        var maxY = height - nodeData.h
         var dragX = startCoords.x + event.clientX - startCoords.clientX
         var dragY = startCoords.y + event.clientY - startCoords.clientY
         var newX = Math.max(0, Math.min(maxX, dragX))
         var newY = Math.max(0, Math.min(maxY, dragY))
-        this.state.wordList[index].x = newX
-        this.state.wordList[index].y = newY
-        this.setState(this.state)
+        this.setState({x: newX, y: newY})
     },
     grabbedMouseDown: function(index, event) {
         var node = React.findDOMNode(this) // board
@@ -47,13 +45,21 @@ var Board = React.createClass({
                     word: d,
                     x: Math.random() * width,
                     y: Math.random() * height,
+                    w: 0,
+                    h: 0,
                     selectedWordIndex: 0,
                     grabbing: false,
-                    grabbedId: null
                 }
             })
         }
         return wordListObject
+    },
+
+    reportOffsets(index, offsets) {
+        // calling offsetHeight and offsetWidth from the DOM
+        // causes recalculation and/or reflow, so cache it.
+        this.state.wordList[index].w = offsets[0]
+        this.state.wordList[index].h = offsets[1]
     },
 
     xyBound: function(index, dim, by) {
@@ -70,6 +76,7 @@ var Board = React.createClass({
                     data={d}
                     above={this.state.grabbing && this.state.grabbedId === i}
                     grabbedMouseDown={this.grabbedMouseDown.bind(this, d.id)}
+                    reportOffsets={this.reportOffsets}
                     xyBound={this.xyBound}
                     />
         }, this)
@@ -92,8 +99,11 @@ var Magnet = React.createClass({
     },
     componentDidMount: function() {
         var node = React.findDOMNode(this)
-        var xCorrect = this.props.data.x + node.offsetWidth - width
-        var yCorrect = this.props.data.y + node.offsetHeight - height
+        var w = node.offsetWidth
+        var h = node.offsetHeight
+        var xCorrect = this.props.data.x + w - width
+        var yCorrect = this.props.data.y + h - height
+        this.props.reportOffsets(this.props.data.id, [w,h])
         if ( xCorrect > 0 ) this.props.xyBound(this.props.data.id, "x", -xCorrect)
         if ( yCorrect > 0 ) this.props.xyBound(this.props.data.id, "y", -yCorrect)
     },
