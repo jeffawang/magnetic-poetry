@@ -49,8 +49,6 @@ var Board = React.createClass({
                     y: Math.random() * height,
                     w: 0,
                     h: 0,
-                    selectedWordIndex: 0,
-                    grabbing: false,
                 }
             })
         }
