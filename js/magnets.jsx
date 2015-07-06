@@ -3,7 +3,8 @@ var magnetBoard
 
 d3.json("/data/words.json", function(err, data) {
     if (err !== null) return console.warn(err)
-    magnetBoard = React.render(<Board words={data} />, document.getElementById("wrapper"))
+    var wrapper = document.getElementById("wrapper")
+    magnetBoard = React.render(<Board words={data} wrapper={wrapper}/>, wrapper)
 })
 
 var Board = React.createClass({
@@ -20,7 +21,7 @@ var Board = React.createClass({
         this.setState(this.state)
     },
     grabbedMouseDown: function(index, event) {
-        var board = React.findDOMNode(this)
+        var wrapper = this.props.wrapper
         var magnetData = this.state.wordList[index]
         var originOffset = {
             x: magnetData.x - event.clientX,
@@ -28,15 +29,15 @@ var Board = React.createClass({
         }
         var newMouseMove = this.grabbedMouseMove.bind(this, index, originOffset)
         var newMouseUp = this.grabbedMouseUp.bind(this, newMouseMove)
-        board.addEventListener("mousemove", newMouseMove, false)
-        board.addEventListener("mouseup", newMouseUp, false)
+        wrapper.addEventListener("mousemove", newMouseMove, false)
+        wrapper.addEventListener("mouseup", newMouseUp, false)
         this.setState({grabbing: true, grabbedId: index})
     },
     grabbedMouseUp: function(mouseMoveFunc, event) {
         this.setState({grabbing: false})
-        board = React.findDOMNode(this)
-        board.removeEventListener("mousemove", mouseMoveFunc)
-        board.removeEventListener(event.type, arguments.callee) // For some reason this doesn't work!!
+        var wrapper = this.props.wrapper
+        wrapper.removeEventListener("mousemove", mouseMoveFunc)
+        wrapper.removeEventListener(event.type, arguments.callee) // For some reason this doesn't work!!
     },
     getInitialState: function() {
         var wordListObject = {
