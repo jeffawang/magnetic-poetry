@@ -1,8 +1,9 @@
 var width = height = 900;
+var magnetBoard
 
 d3.json("/data/words.json", function(err, data) {
     if (err !== null) return console.warn(err)
-    React.render(<Board words={data} />, document.getElementById("wrapper"))
+    magnetBoard = React.render(<Board words={data} />, document.getElementById("wrapper"))
 })
 
 var Board = React.createClass({
