@@ -23,8 +23,10 @@ var Board = React.createClass({
         var newMouseUp = this.grabbedMouseUp.bind(this, newMouseMove)
         node.addEventListener("mousemove", newMouseMove, false)
         node.addEventListener("mouseup", newMouseUp, false)
+        this.setState({grabbing: true, grabbedId: index})
     },
     grabbedMouseUp: function(mouseMoveFunc, event) {
+        this.setState({grabbing: false})
         node = React.findDOMNode(this)
         node.removeEventListener("mousemove", mouseMoveFunc)
         node.removeEventListener(event.type, arguments.callee) // For some reason this doesn't work!!
@@ -52,10 +54,12 @@ var Board = React.createClass({
             return <Magnet
                 ref={i}
                 data={d}
+                grabbing={this.state.grabbing}
+                grabbedId={this.state.grabbedId}
                 grabbedMouseDown={this.grabbedMouseDown.bind(this, d.id)}
                 />
         }, this)
-        return <div id="board" >
+        return <div id="board" className={myClasses} >
             {magnets}
         </div>
     }
@@ -66,9 +70,7 @@ var Magnet = React.createClass({
         return this.makeStyle()
     },
     makeStyle: function() {
-        this.grabbingMe = this.props.selectedWordIndex === this.props.wordid && this.props.grabbing
         newStyle = {
-                zIndex: this.grabbingMe ? 1 : 0,
                 left:   this.props.data.x + "px",
                 top:    this.props.data.y + "px"
         }
@@ -77,7 +79,8 @@ var Magnet = React.createClass({
     render: function() {
         var omg = {"left": "100px"}
         var cx = React.addons.classSet
-        var myClasses = cx({magnet: true, grabbable: true})
+        var grabbable = !(this.props.grabbing && (this.props.data.id === this.props.grabbedId))
+        var myClasses = cx({magnet: true, grabbable: grabbable})
         return <div className={myClasses} style={this.makeStyle()} onMouseDown={this.props.grabbedMouseDown}>
             {this.props.data.word}
         </div>
