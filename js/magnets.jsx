@@ -7,25 +7,25 @@ d3.json("/data/words.json", function(err, data) {
 })
 
 var Board = React.createClass({
-    grabbedMouseMove: function(index, startCoords, event) {
+    grabbedMouseMove: function(index, originOffset, event) {
         var nodeData = this.state.wordList[index]
         var maxX = width - nodeData.w
         var maxY = height - nodeData.h
-        var dragX = startCoords.x + event.clientX - startCoords.clientX
-        var dragY = startCoords.y + event.clientY - startCoords.clientY
+        var dragX = originOffset.x + event.clientX
+        var dragY = originOffset.y + event.clientY
         var newX = Math.max(0, Math.min(maxX, dragX))
         var newY = Math.max(0, Math.min(maxY, dragY))
-        this.setState({x: newX, y: newY})
+        nodeData.x = newX
+        nodeData.y = newY
+        this.setState(this.state)
     },
     grabbedMouseDown: function(index, event) {
         var node = React.findDOMNode(this) // board
-        var startCoords = {
-            x: this.state.wordList[index].x,
-            y: this.state.wordList[index].y,
-            clientX: event.clientX,
-            clientY: event.clientY
+        var originOffset = {
+            x: this.state.wordList[index].x - event.clientX,
+            y: this.state.wordList[index].y - event.clientY
         }
-        var newMouseMove = this.grabbedMouseMove.bind(this, index, startCoords)
+        var newMouseMove = this.grabbedMouseMove.bind(this, index, originOffset)
         var newMouseUp = this.grabbedMouseUp.bind(this, newMouseMove)
         node.addEventListener("mousemove", newMouseMove, false)
         node.addEventListener("mouseup", newMouseUp, false)
