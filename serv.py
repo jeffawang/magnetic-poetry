@@ -102,7 +102,8 @@ if __name__ == "__main__":
             url(r"/", MainHandler),
             #url(r"/zk", ZooPathHandler, dict(zk_addr=opts.zk_addr), name="zk")
             url(r"/js/(.*)", tornado.web.StaticFileHandler, {"path": 'js'}),
-            url(r"/data/(.*)", tornado.web.StaticFileHandler, {"path": 'data'})
+            url(r"/data/(.*)", tornado.web.StaticFileHandler, {"path": 'data'}),
+            url(r"/css/(.*)", tornado.web.StaticFileHandler, {"path": 'css'})
         ],
         debug=opts.debug,
         template_path="views")

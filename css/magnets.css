@@ -1,0 +1,42 @@
+div#board {
+    position: relative;
+    border: 1px solid #aaa;
+    height: 900px;
+    width: 900px;
+}
+
+.grabbing {
+    cursor: -webkit-grabbing;
+    cursor: grabbing;
+}
+
+.grabbable {
+    cursor: -webkit-grab;
+    cursor: grab;
+}
+
+div.magnet {
+    position: absolute;
+    border: 1px solid #aaa;
+    background: white;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+body {
+  font-family: Sans-Serif;
+}
+
+* {
+   -moz-user-select: -moz-none;
+   -khtml-user-select: none;
+   -webkit-user-select: none;
+
+   /*
+     Introduced in IE 10.
+     See http://ie.microsoft.com/testdrive/HTML5/msUserSelect/
+   */
+   -ms-user-select: none;
+   user-select: none;
+}
+
