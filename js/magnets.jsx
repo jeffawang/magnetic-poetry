@@ -7,7 +7,7 @@ d3.json("/data/words.json", function(err, data) {
 
 var Board = React.createClass({
     grabbedMouseMove: function(index, startCoords, event) {
-        var node = React.findDOMNode(this.refs[index])
+        var node = React.findDOMNode(this.refs[index]) // Magnet
         var maxX = width - node.offsetWidth
         var maxY = height - node.offsetHeight
         var dragX = startCoords.x + event.clientX - startCoords.clientX
@@ -19,7 +19,7 @@ var Board = React.createClass({
         this.setState(this.state)
     },
     grabbedMouseDown: function(index, event) {
-        var node = React.findDOMNode(this)
+        var node = React.findDOMNode(this) // board
         var startCoords = {
             x: this.state.wordList[index].x,
             y: this.state.wordList[index].y,
@@ -65,17 +65,17 @@ var Board = React.createClass({
         var myClasses = cx({board: true, grabbing: this.state.grabbing})
         var magnets = this.state.wordList.map(function(d, i) {
             return <Magnet
-                ref={i}
-                data={d}
-                grabbing={this.state.grabbing}
-                grabbedId={this.state.grabbedId}
-                grabbedMouseDown={this.grabbedMouseDown.bind(this, d.id)}
-                xyBound={this.xyBound}
-                />
+                    ref={i}
+                    data={d}
+                    grabbing={this.state.grabbing}
+                    grabbedId={this.state.grabbedId}
+                    grabbedMouseDown={this.grabbedMouseDown.bind(this, d.id)}
+                    xyBound={this.xyBound}
+                    />
         }, this)
         return <div id="board" className={myClasses} >
-            {magnets}
-        </div>
+                   {magnets}
+               </div>
     }
 });
 
@@ -102,9 +102,13 @@ var Magnet = React.createClass({
         var cx = React.addons.classSet
         var grabbable = !(this.props.grabbing && (this.props.data.id === this.props.grabbedId))
         var myClasses = cx({magnet: true, grabbable: grabbable})
-        return <div className={myClasses} style={this.makeStyle()} onMouseDown={this.props.grabbedMouseDown}>
-            {this.props.data.word}
-        </div>
+        return <div
+                className={myClasses}
+                style={this.makeStyle()}
+                onMouseDown={this.props.grabbedMouseDown}
+                >
+                   {this.props.data.word}
+               </div>
     }
 })
 
