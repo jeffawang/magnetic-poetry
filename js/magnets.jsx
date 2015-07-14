@@ -102,7 +102,7 @@ var Magnet = React.createClass({
     render: function() {
         var omg = {"left": "100px"}
         var cx = React.addons.classSet
-        var myClasses = cx({magnet: true, grabbable: true, above: this.props.above})
+        var myClasses = cx({magnet: true, grabbable: !this.props.above, above: this.props.above, grabbing: this.props.above})
         return <div
                 className={myClasses}
                 style={this.makeStyle()}
